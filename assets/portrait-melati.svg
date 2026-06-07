@@ -1,0 +1,10 @@
+<svg width="640" height="736" viewBox="0 0 640 736" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect width="640" height="736" fill="#EEF5F3"/>
+  <rect x="0" y="0" width="640" height="210" fill="#146C63"/>
+  <circle cx="320" cy="270" r="116" fill="#C69A35"/>
+  <path d="M152 736C178 556 235 456 320 456C405 456 462 556 488 736H152Z" fill="#244B7A"/>
+  <circle cx="320" cy="276" r="82" fill="#D69A80"/>
+  <path d="M222 296C225 207 263 163 319 163C377 163 417 207 421 296C389 268 354 258 320 258C286 258 252 268 222 296Z" fill="#2A2521"/>
+  <rect x="148" y="602" width="344" height="86" fill="#FFFFFF" fill-opacity=".84"/>
+  <text x="320" y="654" text-anchor="middle" font-family="Arial, sans-serif" font-size="34" font-weight="700" fill="#146C63">RT 04</text>
+</svg>

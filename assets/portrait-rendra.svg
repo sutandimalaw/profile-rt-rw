@@ -1,0 +1,10 @@
+<svg width="640" height="736" viewBox="0 0 640 736" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect width="640" height="736" fill="#F6F3ED"/>
+  <rect x="0" y="0" width="640" height="210" fill="#102A28"/>
+  <circle cx="320" cy="270" r="116" fill="#B95543"/>
+  <path d="M158 736C181 552 234 450 320 450C406 450 459 552 482 736H158Z" fill="#0E3B38"/>
+  <circle cx="320" cy="274" r="83" fill="#C8896F"/>
+  <path d="M232 260C248 191 289 166 333 171C380 176 410 211 414 272C383 245 341 236 293 244C267 249 247 258 232 260Z" fill="#1D201E"/>
+  <rect x="148" y="602" width="344" height="86" fill="#FFFFFF" fill-opacity=".84"/>
+  <text x="320" y="654" text-anchor="middle" font-family="Arial, sans-serif" font-size="34" font-weight="700" fill="#0E3B38">RW</text>
+</svg>

@@ -1,0 +1,236 @@
+<!doctype html>
+<html lang="id">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Profil Kandidat RT/RW Cluster Sriwijaya</title>
+    <meta
+      name="description"
+      content="Website informasi kandidat RT dan RW Cluster Sriwijaya, Perumahan Darmawangsa Bekasi."
+    />
+    <meta name="theme-color" content="#0e3b38" />
+    <meta property="og:title" content="Profil Kandidat RT/RW Cluster Sriwijaya" />
+    <meta
+      property="og:description"
+      content="Kenali kandidat RT dan RW Cluster Sriwijaya sebelum hari pemilihan."
+    />
+    <meta property="og:type" content="website" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <header class="site-header" data-header>
+      <a class="brand" href="#beranda" aria-label="Ke bagian beranda">
+        <span class="brand-mark">S</span>
+        <span>
+          <strong data-site="shortName">Sriwijaya</strong>
+          <small>RT/RW</small>
+        </span>
+      </a>
+
+      <button class="nav-toggle" type="button" aria-label="Buka menu" aria-expanded="false" data-nav-toggle>
+        <span></span>
+        <span></span>
+        <span></span>
+      </button>
+
+      <nav class="site-nav" aria-label="Navigasi utama" data-nav>
+        <a href="#kandidat">Kandidat</a>
+        <a href="#program">Program</a>
+        <a href="#jadwal">Jadwal</a>
+        <a href="#faq">FAQ</a>
+        <a class="nav-cta" href="#kontak">Kontak Panitia</a>
+      </nav>
+    </header>
+
+    <main>
+      <section class="hero section" id="beranda">
+        <div class="section-inner hero-grid">
+          <div class="hero-copy">
+            <p class="eyebrow">Pemilihan lingkungan warga</p>
+            <h1>Profil Kandidat RT/RW Cluster Sriwijaya</h1>
+            <p class="hero-lead">
+              Kenali kandidat dari 4 wilayah RT dan 1 kandidat RW untuk Cluster Sriwijaya,
+              Perumahan Darmawangsa Bekasi.
+            </p>
+            <div class="hero-actions">
+              <a class="button button-primary" href="#kandidat">Lihat Kandidat</a>
+              <a class="button button-secondary" data-whatsapp-link href="#kontak">Hubungi Panitia</a>
+            </div>
+            <dl class="hero-facts">
+              <div>
+                <dt>Wilayah</dt>
+                <dd data-site="region">Cluster Sriwijaya</dd>
+              </div>
+              <div>
+                <dt>Kandidat</dt>
+                <dd>4 RT + 1 RW</dd>
+              </div>
+              <div>
+                <dt>Status Data</dt>
+                <dd>Dummy sementara</dd>
+              </div>
+            </dl>
+          </div>
+
+          <div class="hero-panel" aria-label="Ringkasan pemilihan">
+            <div class="hero-panel-top">
+              <span class="status-dot"></span>
+              <span>Informasi warga</span>
+            </div>
+            <div class="ballot-card">
+              <p>Agenda</p>
+              <strong data-site="electionTitle">Pemilihan RT/RW 2026</strong>
+              <span data-site="electionDate">Tanggal menunggu keputusan panitia</span>
+            </div>
+            <div class="mini-candidate-strip" data-mini-candidates></div>
+          </div>
+        </div>
+      </section>
+
+      <section class="overview section">
+        <div class="section-inner overview-grid">
+          <div>
+            <p class="eyebrow">Tentang halaman</p>
+            <h2>Semua profil kandidat dikumpulkan dalam satu halaman yang mudah dibandingkan.</h2>
+          </div>
+          <div class="overview-copy">
+            <p>
+              Website ini dibuat sebagai pusat informasi netral agar warga bisa membaca visi, misi,
+              pengalaman, dan program prioritas tiap kandidat sebelum menentukan pilihan.
+            </p>
+            <div class="notice">
+              Data kandidat saat ini masih contoh. Nanti nama, foto, visi, misi, jadwal, dan kontak
+              panitia bisa diganti dari satu file data.
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="section candidates-section" id="kandidat">
+        <div class="section-inner">
+          <div class="section-heading">
+            <div>
+              <p class="eyebrow">Daftar kandidat</p>
+              <h2>Profil RT dan RW</h2>
+            </div>
+            <p>
+              Gunakan filter untuk melihat kandidat berdasarkan wilayah yang akan dipilih warga.
+            </p>
+          </div>
+
+          <div class="filter-bar" role="list" aria-label="Filter kandidat" data-filter-bar></div>
+          <div class="candidate-grid" data-candidate-grid></div>
+        </div>
+      </section>
+
+      <section class="section program-section" id="program">
+        <div class="section-inner">
+          <div class="section-heading">
+            <div>
+              <p class="eyebrow">Fokus warga</p>
+              <h2>Program yang paling mudah dipantau bersama</h2>
+            </div>
+            <p>
+              Daftar ini menjadi acuan umum untuk membaca arah program tiap kandidat.
+            </p>
+          </div>
+
+          <div class="program-grid">
+            <article>
+              <span>01</span>
+              <h3>Keamanan lingkungan</h3>
+              <p>Koordinasi jadwal ronda, akses tamu, dan respons cepat saat ada kejadian.</p>
+            </article>
+            <article>
+              <span>02</span>
+              <h3>Komunikasi warga</h3>
+              <p>Informasi resmi yang rapi, tidak berulang, dan mudah ditelusuri kembali.</p>
+            </article>
+            <article>
+              <span>03</span>
+              <h3>Kebersihan area</h3>
+              <p>Perawatan taman, drainase, sampah, serta area bersama yang sering dipakai.</p>
+            </article>
+            <article>
+              <span>04</span>
+              <h3>Administrasi tertib</h3>
+              <p>Surat pengantar, data warga, kas, dan dokumentasi kegiatan dibuat transparan.</p>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <section class="section schedule-section" id="jadwal">
+        <div class="section-inner schedule-grid">
+          <div>
+            <p class="eyebrow">Jadwal pemilihan</p>
+            <h2>Timeline sementara</h2>
+            <p>
+              Tanggal resmi bisa disesuaikan setelah panitia menetapkan jadwal final.
+            </p>
+          </div>
+          <div class="timeline" data-timeline></div>
+        </div>
+      </section>
+
+      <section class="section faq-section" id="faq">
+        <div class="section-inner">
+          <div class="section-heading">
+            <div>
+              <p class="eyebrow">Pertanyaan warga</p>
+              <h2>FAQ</h2>
+            </div>
+          </div>
+          <div class="faq-list" data-faq-list></div>
+        </div>
+      </section>
+
+      <section class="final-cta section" id="kontak">
+        <div class="section-inner final-cta-inner">
+          <div>
+            <p class="eyebrow">Kontak panitia</p>
+            <h2>Siapkan data kandidat asli saat sudah ditetapkan.</h2>
+            <p>
+              Setelah daftar kandidat final tersedia, isi website tinggal diganti tanpa mengubah
+              struktur halaman.
+            </p>
+          </div>
+          <a class="button button-primary" data-whatsapp-link href="#">Hubungi Panitia</a>
+        </div>
+      </section>
+    </main>
+
+    <footer class="site-footer">
+      <div class="section-inner footer-inner">
+        <p>
+          <strong data-site="name">Cluster Sriwijaya</strong>
+          <span>Perumahan Darmawangsa Bekasi</span>
+        </p>
+        <a data-whatsapp-link href="#">WhatsApp Panitia</a>
+      </div>
+    </footer>
+
+    <div class="modal" role="dialog" aria-modal="true" aria-labelledby="modal-title" hidden data-modal>
+      <div class="modal-backdrop" data-modal-close></div>
+      <article class="modal-card">
+        <button class="modal-close" type="button" aria-label="Tutup detail kandidat" data-modal-close>
+          &times;
+        </button>
+        <div class="modal-profile" data-modal-content></div>
+      </article>
+    </div>
+
+    <a class="floating-cta" data-whatsapp-link href="#" aria-label="Hubungi panitia via WhatsApp">
+      WhatsApp Panitia
+    </a>
+
+    <script src="data.js"></script>
+    <script src="script.js"></script>
+  </body>
+</html>
