@@ -12,6 +12,39 @@ Data utama ada di `data.js`.
 - Ubah FAQ di bagian `faqs`.
 - Ubah jadwal di bagian `timeline`.
 
+## Import Data dari Google Form
+
+Untuk tahap ini aplikasi belum memakai backend atau Google Sheets API. Alur yang disiapkan:
+
+1. Response Google Form masuk ke Google Sheets.
+2. Panitia export response sebagai CSV.
+3. CSV mengikuti contoh `samples/kandidat-google-form.csv`.
+4. Data CSV dikonversi ke bagian `candidates` di `data.js`.
+
+Kolom CSV yang disiapkan:
+
+| Kolom CSV | Field di `data.js` | Catatan |
+| --- | --- | --- |
+| `nama` | `name` | Nama lengkap kandidat. |
+| `kategori` | `category` | Isi `RT` atau `RW`. |
+| `rt_rw` | `rtRw`, `role`, `filter` | Contoh: `RT 01`, `RT 02`, atau `RW`. |
+| `blok_area` | `area` | Wilayah/blok yang diwakili. |
+| `alamat_rumah` | `house` | Ditampilkan di modal profil. |
+| `profesi` | `profession` | Ditampilkan di modal profil. |
+| `foto` | `photo` | Path file lokal, contoh `assets/portrait-arief.svg`. |
+| `tagline` | `tagline` | Kalimat pendek di kartu kandidat. |
+| `ringkasan` | `summary` | Ringkasan profil di modal. |
+| `visi` | `vision` | Visi kandidat. |
+| `misi` | `missions` | Pisahkan beberapa item dengan tanda `|`. |
+| `program` | `programs` | Pisahkan beberapa item dengan tanda `|`. |
+| `pengalaman` | `experience` | Pisahkan beberapa item dengan tanda `|`. |
+| `quote` | `quote` | Kutipan kandidat. |
+| `status_verifikasi` | `verificationStatus` | Contoh: `Belum diverifikasi`, `Terverifikasi panitia`, atau `Final`. |
+
+Jika beberapa field belum lengkap, halaman tetap memakai fallback seperti "Informasi sedang dilengkapi panitia" supaya tampilan tidak rusak.
+
+Foto kandidat tahap awal belum di-upload otomatis dari Google Form. Simpan file foto di folder `assets`, lalu isi kolom `foto` dengan path file tersebut.
+
 ## Preview Lokal
 
 Bisa langsung buka `index.html` di browser.

@@ -498,6 +498,31 @@ h3 {
   object-fit: cover;
 }
 
+.candidate-photo-placeholder,
+.mini-photo-placeholder {
+  display: grid;
+  place-items: center;
+  background:
+    linear-gradient(135deg, rgba(14, 59, 56, 0.12), rgba(198, 154, 53, 0.16)),
+    #edf3f1;
+  color: #526462;
+  font-weight: 900;
+  text-align: center;
+}
+
+.candidate-photo-placeholder {
+  width: 100%;
+  aspect-ratio: 4 / 4.6;
+  padding: 18px;
+  font-size: 13px;
+  text-transform: uppercase;
+}
+
+.mini-photo-placeholder {
+  width: 100%;
+  aspect-ratio: 1;
+}
+
 .candidate-photo-wrap span {
   position: absolute;
   left: 10px;
@@ -527,11 +552,38 @@ h3 {
 }
 
 .candidate-body p:not(.candidate-area) {
-  min-height: 84px;
-  margin: 12px 0 16px;
+  min-height: 78px;
+  margin: 12px 0 14px;
   color: var(--muted);
   font-size: 14px;
   line-height: 1.55;
+}
+
+.candidate-meta,
+.profile-status-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  align-items: center;
+}
+
+.candidate-meta {
+  min-height: 28px;
+  margin-bottom: 14px;
+}
+
+.status-pill {
+  display: inline-flex;
+  min-height: 26px;
+  align-items: center;
+  padding: 0 10px;
+  border: 1px solid rgba(14, 59, 56, 0.18);
+  background: #eef6f3;
+  color: var(--green);
+  font-size: 11px;
+  font-weight: 900;
+  line-height: 1.2;
+  text-transform: uppercase;
 }
 
 .text-button {
@@ -799,6 +851,18 @@ h3 {
   aspect-ratio: 4 / 5;
   object-fit: cover;
   background: #e9f0ee;
+}
+
+.modal-media .candidate-photo-placeholder {
+  aspect-ratio: 4 / 5;
+  font-size: 14px;
+}
+
+.profile-status-row {
+  margin-top: 14px;
+  color: var(--muted);
+  font-size: 13px;
+  font-weight: 800;
 }
 
 .modal-summary {

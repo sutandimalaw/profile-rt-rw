@@ -9,6 +9,7 @@
     filterBar: document.querySelector("[data-filter-bar]"),
     faqList: document.querySelector("[data-faq-list]"),
     timeline: document.querySelector("[data-timeline]"),
+    voterGuide: document.querySelector("[data-voter-guide]"),
     miniCandidates: document.querySelector("[data-mini-candidates]"),
     modal: document.querySelector("[data-modal]"),
     modalContent: document.querySelector("[data-modal-content]"),
@@ -23,6 +24,38 @@
       .replaceAll(">", "&gt;")
       .replaceAll('"', "&quot;")
       .replaceAll("'", "&#039;");
+  }
+
+  function fallback(value, defaultValue) {
+    const text = String(value || "").trim();
+    return text || defaultValue;
+  }
+
+  function asList(items, defaultItem) {
+    if (Array.isArray(items)) {
+      const cleanItems = items.map((item) => String(item || "").trim()).filter(Boolean);
+      return cleanItems.length ? cleanItems : [defaultItem];
+    }
+
+    const cleanItem = String(items || "").trim();
+    return cleanItem ? [cleanItem] : [defaultItem];
+  }
+
+  function candidatePhoto(candidate) {
+    const name = fallback(candidate.name, "Kandidat");
+    if (!candidate.photo) {
+      return `<div class="candidate-photo-placeholder" aria-label="Foto ${escapeHtml(name)} belum tersedia">Foto menyusul</div>`;
+    }
+
+    return `<img src="${escapeHtml(candidate.photo)}" alt="Foto ${escapeHtml(name)}" />`;
+  }
+
+  function candidateStatus(candidate) {
+    return fallback(candidate.verificationStatus, "Belum diverifikasi");
+  }
+
+  function candidateSource(candidate) {
+    return fallback(candidate.source, data.dataImport?.sourceLabel || "Sumber data panitia");
   }
 
   function whatsappUrl() {
@@ -63,16 +96,24 @@
   }
 
   function candidateTemplate(candidate) {
+    const name = fallback(candidate.name, "Nama kandidat menyusul");
+    const role = fallback(candidate.role, candidate.rtRw ? `Kandidat ${candidate.rtRw}` : "Kandidat");
+    const area = fallback(candidate.area, "Wilayah menyusul");
+    const tagline = fallback(candidate.tagline, "Ringkasan profil kandidat sedang dilengkapi panitia.");
+
     return `
       <article class="candidate-card">
         <div class="candidate-photo-wrap">
-          <img src="${escapeHtml(candidate.photo)}" alt="Foto ${escapeHtml(candidate.name)}" />
-          <span>${escapeHtml(candidate.role)}</span>
+          ${candidatePhoto(candidate)}
+          <span>${escapeHtml(role)}</span>
         </div>
         <div class="candidate-body">
-          <p class="candidate-area">${escapeHtml(candidate.area)}</p>
-          <h3>${escapeHtml(candidate.name)}</h3>
-          <p>${escapeHtml(candidate.tagline)}</p>
+          <p class="candidate-area">${escapeHtml(area)}</p>
+          <h3>${escapeHtml(name)}</h3>
+          <p>${escapeHtml(tagline)}</p>
+          <div class="candidate-meta">
+            <span class="status-pill">${escapeHtml(candidateStatus(candidate))}</span>
+          </div>
           <button class="text-button" type="button" data-candidate-id="${escapeHtml(candidate.id)}">
             Lihat profil
           </button>
@@ -95,8 +136,8 @@
       .map(
         (candidate) => `
           <button type="button" data-candidate-id="${escapeHtml(candidate.id)}">
-            <img src="${escapeHtml(candidate.photo)}" alt="" />
-            <span>${escapeHtml(candidate.role.replace("Kandidat ", ""))}</span>
+            ${candidate.photo ? `<img src="${escapeHtml(candidate.photo)}" alt="" />` : `<div class="mini-photo-placeholder"></div>`}
+            <span>${escapeHtml(fallback(candidate.role, "Kandidat").replace("Kandidat ", ""))}</span>
           </button>
         `
       )
@@ -104,10 +145,89 @@
   }
 
   function listTemplate(items) {
+    const safeItems = asList(items, "Informasi sedang dilengkapi panitia.");
+
     return `
       <ul>
-        ${items.map((item) => `<li>${escapeHtml(item)}</li>`).join("")}
+        ${safeItems.map((item) => `<li>${escapeHtml(item)}</li>`).join("")}
       </ul>
+    `;
+  }
+
+  function compactListTemplate(items, defaultItem) {
+    const safeItems = asList(items, defaultItem);
+
+    return `
+      <ul class="guide-list">
+        ${safeItems.map((item) => `<li>${escapeHtml(item)}</li>`).join("")}
+      </ul>
+    `;
+  }
+
+  function numberedStepsTemplate(items) {
+    const safeItems = asList(items, "Langkah pemilihan menunggu keputusan panitia.");
+
+    return `
+      <ol class="guide-steps">
+        ${safeItems.map((item) => `<li>${escapeHtml(item)}</li>`).join("")}
+      </ol>
+    `;
+  }
+
+  function renderVoterGuide() {
+    const guide = data.voterGuide || {};
+    const statusLabel = fallback(guide.statusLabel, "Informasi sementara");
+    const location = fallback(guide.location, "Menunggu keputusan panitia");
+    const time = fallback(guide.time, "Menunggu keputusan panitia");
+
+    selectors.voterGuide.innerHTML = `
+      <div class="guide-summary-card">
+        <span class="guide-status">${escapeHtml(statusLabel)}</span>
+        <h3>Ringkasan hari pemilihan</h3>
+        <dl>
+          <div>
+            <dt>Lokasi</dt>
+            <dd>${escapeHtml(location)}</dd>
+          </div>
+          <div>
+            <dt>Waktu</dt>
+            <dd>${escapeHtml(time)}</dd>
+          </div>
+          <div>
+            <dt>Sistem suara</dt>
+            <dd>1 suara per KK</dd>
+          </div>
+        </dl>
+        <p>Hasil voting dihitung dari suara terbanyak pemilih yang hadir.</p>
+      </div>
+
+      <div class="guide-detail-grid">
+        <article class="guide-card guide-card-wide">
+          <span>Aturan voting</span>
+          <h3>Ketentuan utama</h3>
+          ${compactListTemplate(guide.rules, "Aturan voting menunggu keputusan panitia.")}
+        </article>
+        <article class="guide-card">
+          <span>Syarat pemilih</span>
+          <h3>Yang berhak memilih</h3>
+          ${compactListTemplate(guide.eligibility, "Syarat pemilih menunggu keputusan panitia.")}
+        </article>
+        <article class="guide-card">
+          <span>Dokumen</span>
+          <h3>Yang perlu disiapkan</h3>
+          ${compactListTemplate(guide.documents, "Dokumen pemilih menunggu keputusan panitia.")}
+        </article>
+        <article class="guide-card guide-card-wide">
+          <span>Alur di lokasi</span>
+          <h3>Langkah memilih</h3>
+          ${numberedStepsTemplate(guide.steps)}
+        </article>
+        <article class="guide-card guide-card-wide guide-note-card">
+          <span>Catatan panitia</span>
+          <h3>Informasi sementara</h3>
+          ${compactListTemplate(guide.notes, "Catatan panitia menunggu keputusan final.")}
+        </article>
+      </div>
     `;
   }
 
@@ -115,29 +235,50 @@
     const candidate = data.candidates.find((item) => item.id === candidateId);
     if (!candidate) return;
 
+    const name = fallback(candidate.name, "Nama kandidat menyusul");
+    const role = fallback(candidate.role, candidate.rtRw ? `Kandidat ${candidate.rtRw}` : "Kandidat");
+    const area = fallback(candidate.area, "Wilayah menyusul");
+    const house = fallback(candidate.house, "Alamat rumah belum diisi");
+    const profession = fallback(candidate.profession, "Profesi belum diisi");
+    const summary = fallback(candidate.summary, "Ringkasan profil kandidat sedang dilengkapi panitia.");
+    const vision = fallback(candidate.vision, "Visi kandidat sedang dilengkapi panitia.");
+    const quote = fallback(candidate.quote, "Pernyataan kandidat sedang dilengkapi panitia.");
+
     selectors.modalContent.innerHTML = `
       <div class="modal-media">
-        <img src="${escapeHtml(candidate.photo)}" alt="Foto ${escapeHtml(candidate.name)}" />
+        ${candidatePhoto(candidate)}
       </div>
       <div class="modal-copy">
-        <p class="candidate-area">${escapeHtml(candidate.role)} - ${escapeHtml(candidate.area)}</p>
-        <h2 id="modal-title">${escapeHtml(candidate.name)}</h2>
-        <p class="modal-summary">${escapeHtml(candidate.summary)}</p>
+        <p class="candidate-area">${escapeHtml(role)} - ${escapeHtml(area)}</p>
+        <h2 id="modal-title">${escapeHtml(name)}</h2>
+        <div class="profile-status-row">
+          <span class="status-pill">${escapeHtml(candidateStatus(candidate))}</span>
+          <span>Sumber data: ${escapeHtml(candidateSource(candidate))}</span>
+        </div>
+        <p class="modal-summary">${escapeHtml(summary)}</p>
 
         <dl class="profile-facts">
           <div>
             <dt>Domisili</dt>
-            <dd>${escapeHtml(candidate.house)}</dd>
+            <dd>${escapeHtml(house)}</dd>
           </div>
           <div>
             <dt>Profesi</dt>
-            <dd>${escapeHtml(candidate.profession)}</dd>
+            <dd>${escapeHtml(profession)}</dd>
+          </div>
+          <div>
+            <dt>Kategori</dt>
+            <dd>${escapeHtml(fallback(candidate.category, "Belum diisi"))}</dd>
+          </div>
+          <div>
+            <dt>RT/RW</dt>
+            <dd>${escapeHtml(fallback(candidate.rtRw, "Belum diisi"))}</dd>
           </div>
         </dl>
 
         <section>
           <h3>Visi</h3>
-          <p>${escapeHtml(candidate.vision)}</p>
+          <p>${escapeHtml(vision)}</p>
         </section>
 
         <section>
@@ -155,7 +296,7 @@
           ${listTemplate(candidate.experience)}
         </section>
 
-        <blockquote>${escapeHtml(candidate.quote)}</blockquote>
+        <blockquote>${escapeHtml(quote)}</blockquote>
       </div>
     `;
 
@@ -258,6 +399,7 @@
     renderCandidates();
     renderMiniCandidates();
     renderTimeline();
+    renderVoterGuide();
     renderFaqs();
     bindEvents();
   }

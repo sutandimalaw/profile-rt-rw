@@ -9,6 +9,13 @@ window.sriwijayaElectionData = {
     whatsappMessage:
       "Halo Panitia Pemilihan RT/RW Cluster Sriwijaya, saya ingin bertanya tentang informasi kandidat.",
   },
+  dataImport: {
+    mode: "Google Form ke Google Sheets CSV",
+    sourceLabel: "Google Form panitia",
+    listDelimiter: "|",
+    sampleCsv: "samples/kandidat-google-form.csv",
+    requiredColumns: ["nama", "kategori", "rt_rw", "status_verifikasi"],
+  },
   filters: [
     { label: "Semua", value: "all" },
     { label: "RT 01", value: "rt-01" },
@@ -21,12 +28,16 @@ window.sriwijayaElectionData = {
     {
       id: "arief-rt-01",
       filter: "rt-01",
+      category: "RT",
+      rtRw: "RT 01",
       name: "Bapak Arief Wicaksono",
       role: "Kandidat RT 01",
       area: "Blok A dan B",
       house: "Sriwijaya A7",
       profession: "Karyawan swasta",
       photo: "assets/portrait-arief.svg",
+      source: "Google Form panitia",
+      verificationStatus: "Terverifikasi panitia",
       tagline: "Administrasi tertib, respons warga lebih cepat.",
       summary:
         "Aktif membantu pendataan warga dan koordinasi keamanan blok sejak awal menempati Cluster Sriwijaya.",
@@ -51,12 +62,16 @@ window.sriwijayaElectionData = {
     {
       id: "nadya-rt-02",
       filter: "rt-02",
+      category: "RT",
+      rtRw: "RT 02",
       name: "Ibu Nadya Permatasari",
       role: "Kandidat RT 02",
       area: "Blok C dan D",
       house: "Sriwijaya C12",
       profession: "Wirausaha",
       photo: "assets/portrait-nadya.svg",
+      source: "Google Form panitia",
+      verificationStatus: "Terverifikasi panitia",
       tagline: "Lingkungan bersih, komunikasi warga lebih hangat.",
       summary:
         "Sering terlibat dalam kegiatan sosial warga dan pengelolaan acara keluarga di lingkungan cluster.",
@@ -81,12 +96,16 @@ window.sriwijayaElectionData = {
     {
       id: "fajar-rt-03",
       filter: "rt-03",
+      category: "RT",
+      rtRw: "RT 03",
       name: "Bapak Fajar Nugraha",
       role: "Kandidat RT 03",
       area: "Blok E dan F",
       house: "Sriwijaya F3",
       profession: "Analis operasional",
       photo: "assets/portrait-fajar.svg",
+      source: "Google Form panitia",
+      verificationStatus: "Belum diverifikasi",
       tagline: "Keamanan rapi, keputusan berbasis data warga.",
       summary:
         "Memiliki pengalaman menyusun jadwal operasional dan terbiasa membuat laporan singkat untuk tim.",
@@ -111,12 +130,16 @@ window.sriwijayaElectionData = {
     {
       id: "melati-rt-04",
       filter: "rt-04",
+      category: "RT",
+      rtRw: "RT 04",
       name: "Ibu Melati Rahma",
       role: "Kandidat RT 04",
       area: "Blok G dan H",
       house: "Sriwijaya H9",
       profession: "Guru",
       photo: "assets/portrait-melati.svg",
+      source: "Google Form panitia",
+      verificationStatus: "Final",
       tagline: "Ruang warga yang ramah keluarga dan anak.",
       summary:
         "Aktif mendampingi kegiatan edukatif anak dan beberapa kali membantu mediasi kebutuhan warga.",
@@ -141,12 +164,16 @@ window.sriwijayaElectionData = {
     {
       id: "rendra-rw",
       filter: "rw",
+      category: "RW",
+      rtRw: "RW",
       name: "Bapak Rendra Mahaputra",
       role: "Kandidat RW",
       area: "Koordinasi seluruh Cluster Sriwijaya",
       house: "Sriwijaya B18",
       profession: "Konsultan proyek",
       photo: "assets/portrait-rendra.svg",
+      source: "Google Form panitia",
+      verificationStatus: "Terverifikasi panitia",
       tagline: "Koordinasi antar-RT lebih solid dan transparan.",
       summary:
         "Berpengalaman mengelola koordinasi lintas tim dan terbiasa membuat rencana kerja bertahap.",
@@ -191,6 +218,39 @@ window.sriwijayaElectionData = {
       description: "Warga memberikan suara sesuai ketentuan panitia.",
     },
   ],
+  voterGuide: {
+    statusLabel: "Informasi sementara",
+    location: "Menunggu keputusan panitia",
+    time: "Menunggu keputusan panitia",
+    eligibility: [
+      "Pemilih adalah KK atau warga yang terdaftar di Cluster Sriwijaya.",
+      "Setiap KK memiliki 1 suara dalam pemilihan.",
+      "Pemilih hadir langsung di lokasi pemilihan sesuai jadwal panitia.",
+    ],
+    documents: [
+      "Membawa identitas warga atau bukti domisili jika diminta panitia.",
+      "Mengetahui nomor rumah atau blok untuk proses pengecekan daftar pemilih.",
+      "Mengikuti arahan panitia saat registrasi dan pengambilan suara.",
+    ],
+    rules: [
+      "1 suara untuk setiap KK.",
+      "Hasil voting ditentukan berdasarkan suara terbanyak dari pemilih yang hadir.",
+      "Suara diberikan langsung saat pemilihan dan tidak dititipkan.",
+      "Jika satu KK hadir lebih dari satu orang, tetap hanya dihitung 1 suara.",
+      "Keputusan hasil penghitungan disahkan oleh panitia sesuai berita acara.",
+    ],
+    steps: [
+      "Datang ke lokasi pemilihan sesuai jadwal yang ditetapkan panitia.",
+      "Registrasi atau konfirmasi kehadiran kepada petugas panitia.",
+      "Menerima arahan pemilihan dan memberikan suara sesuai ketentuan.",
+      "Menunggu proses penghitungan dan pengumuman resmi dari panitia.",
+    ],
+    notes: [
+      "Detail lokasi, jam, dan teknis pemungutan suara masih dapat disesuaikan.",
+      "Panduan ini bukan fasilitas voting online; pemilihan dilakukan langsung/offline.",
+      "Jika ada perubahan aturan, panitia dapat memperbarui bagian voterGuide di data.js.",
+    ],
+  },
   faqs: [
     {
       question: "Apakah data kandidat di halaman ini sudah final?",
@@ -201,6 +261,11 @@ window.sriwijayaElectionData = {
       question: "Bagaimana cara mengganti nama dan foto kandidat?",
       answer:
         "Edit file data.js, lalu ubah bagian candidates. Foto bisa diganti dengan file gambar di folder assets.",
+    },
+    {
+      question: "Apakah data bisa diambil dari Google Form?",
+      answer:
+        "Bisa. Response Google Form masuk ke Google Sheets, lalu panitia export CSV sesuai format contoh dan konversi ke data kandidat di data.js.",
     },
     {
       question: "Apakah website ini mewakili satu kandidat tertentu?",
