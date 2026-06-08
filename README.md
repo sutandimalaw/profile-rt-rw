@@ -11,6 +11,7 @@ Data utama ada di `data.js`.
 - Ganti foto kandidat dengan file gambar di folder `assets`, lalu ubah path `photo`.
 - Ubah FAQ di bagian `faqs`.
 - Ubah jadwal di bagian `timeline`.
+- Ubah panduan pemilih di bagian `voterGuide`.
 
 ## Import Data dari Google Form
 
@@ -44,6 +45,25 @@ Kolom CSV yang disiapkan:
 Jika beberapa field belum lengkap, halaman tetap memakai fallback seperti "Informasi sedang dilengkapi panitia" supaya tampilan tidak rusak.
 
 Foto kandidat tahap awal belum di-upload otomatis dari Google Form. Simpan file foto di folder `assets`, lalu isi kolom `foto` dengan path file tersebut.
+
+## Edit Panduan Pemilih
+
+Bagian panduan pemilih ada di `voterGuide` dalam `data.js`.
+
+- `statusLabel`: status informasi, contoh `Informasi sementara`.
+- `location`: lokasi pemilihan, atau isi `Menunggu keputusan panitia`.
+- `time`: tanggal/jam pemilihan, atau isi `Menunggu keputusan panitia`.
+- `eligibility`: daftar syarat pemilih.
+- `documents`: daftar dokumen atau informasi yang perlu disiapkan.
+- `rules`: aturan voting, termasuk `1 suara untuk setiap KK`.
+- `steps`: alur pemilih saat datang ke lokasi.
+- `notes`: catatan tambahan dari panitia.
+
+Aturan awal yang sudah dimasukkan:
+
+- 1 suara untuk setiap KK.
+- Hasil voting ditentukan berdasarkan suara terbanyak dari pemilih yang hadir.
+- Suara diberikan langsung saat pemilihan dan tidak dititipkan.
 
 ## Preview Lokal
 
