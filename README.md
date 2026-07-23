@@ -2,6 +2,10 @@
 
 Static website untuk menampilkan profil kandidat RT/RW Cluster Sriwijaya, Perumahan Darmawangsa Bekasi.
 
+## Dokumen Produk
+
+- [PRD Pendaftaran Kandidat RT/RW](docs/prd-pendaftaran-kandidat-rt-rw.md)
+
 ## Edit Data
 
 Data utama ada di `data.js`.
@@ -11,6 +15,7 @@ Data utama ada di `data.js`.
 - Ganti foto kandidat dengan file gambar di folder `assets`, lalu ubah path `photo`.
 - Ubah FAQ di bagian `faqs`.
 - Ubah jadwal di bagian `timeline`.
+- Ubah syarat pendaftaran kandidat di bagian `candidateRegistration`.
 - Ubah panduan pemilih di bagian `voterGuide`.
 
 ## Import Data dari Google Form
@@ -45,6 +50,19 @@ Kolom CSV yang disiapkan:
 Jika beberapa field belum lengkap, halaman tetap memakai fallback seperti "Informasi sedang dilengkapi panitia" supaya tampilan tidak rusak.
 
 Foto kandidat tahap awal belum di-upload otomatis dari Google Form. Simpan file foto di folder `assets`, lalu isi kolom `foto` dengan path file tersebut.
+
+## Edit Syarat Pendaftaran Kandidat
+
+Bagian syarat pendaftaran kandidat ada di `candidateRegistration` dalam `data.js`.
+
+- `statusLabel`: status pendaftaran, contoh `Pendaftaran belum dibuka`.
+- `formUrl`: link Google Form. Jika kosong, tombol akan mengarah ke WhatsApp panitia.
+- `requirements`: daftar syarat dasar calon kandidat.
+- `readiness`: daftar kesiapan pribadi yang perlu disanggupi kandidat.
+- `documents`: data atau dokumen yang perlu disiapkan.
+- `positionNotes`: catatan khusus untuk kandidat RT dan RW.
+- `steps`: alur pendaftaran dari cek syarat sampai publikasi.
+- `notice`: catatan bahwa keputusan final tetap mengikuti verifikasi panitia.
 
 ## Edit Panduan Pemilih
 

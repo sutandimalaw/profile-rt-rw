@@ -7,7 +7,6 @@
   const selectors = {
     candidateGrid: document.querySelector("[data-candidate-grid]"),
     filterBar: document.querySelector("[data-filter-bar]"),
-    faqList: document.querySelector("[data-faq-list]"),
     timeline: document.querySelector("[data-timeline]"),
     voterGuide: document.querySelector("[data-voter-guide]"),
     miniCandidates: document.querySelector("[data-mini-candidates]"),
@@ -79,8 +78,17 @@
     });
   }
 
+  function visibleCandidates() {
+    const hiddenCategories = new Set(data.publication?.hiddenCategories || []);
+
+    return data.candidates.filter((candidate) => !hiddenCategories.has(candidate.category));
+  }
+
   function renderFilters() {
+    const visibleFilterValues = new Set(visibleCandidates().map((candidate) => candidate.filter));
+
     selectors.filterBar.innerHTML = data.filters
+      .filter((filter) => filter.value === "all" || visibleFilterValues.has(filter.value))
       .map(
         (filter) => `
           <button
@@ -99,7 +107,8 @@
     const name = fallback(candidate.name, "Nama kandidat menyusul");
     const role = fallback(candidate.role, candidate.rtRw ? `Kandidat ${candidate.rtRw}` : "Kandidat");
     const area = fallback(candidate.area, "Wilayah menyusul");
-    const tagline = fallback(candidate.tagline, "Ringkasan profil kandidat sedang dilengkapi panitia.");
+    const tagline = fallback(candidate.tagline, "");
+    const candidateNumber = String(candidate.candidateNumber || "").trim();
 
     return `
       <article class="candidate-card">
@@ -110,9 +119,9 @@
         <div class="candidate-body">
           <p class="candidate-area">${escapeHtml(area)}</p>
           <h3>${escapeHtml(name)}</h3>
-          <p>${escapeHtml(tagline)}</p>
           <div class="candidate-meta">
-            <span class="status-pill">${escapeHtml(candidateStatus(candidate))}</span>
+            ${candidateNumber ? `<span class="status-pill candidate-number-pill">Nomor ${escapeHtml(candidateNumber)}</span>` : ""}
+
           </div>
           <button class="text-button" type="button" data-candidate-id="${escapeHtml(candidate.id)}">
             Lihat profil
@@ -123,16 +132,17 @@
   }
 
   function renderCandidates() {
+    const candidates = visibleCandidates();
     const filteredCandidates =
       state.filter === "all"
-        ? data.candidates
-        : data.candidates.filter((candidate) => candidate.filter === state.filter);
+        ? candidates
+        : candidates.filter((candidate) => candidate.filter === state.filter);
 
     selectors.candidateGrid.innerHTML = filteredCandidates.map(candidateTemplate).join("");
   }
 
   function renderMiniCandidates() {
-    selectors.miniCandidates.innerHTML = data.candidates
+    selectors.miniCandidates.innerHTML = visibleCandidates()
       .map(
         (candidate) => `
           <button type="button" data-candidate-id="${escapeHtml(candidate.id)}">
@@ -154,6 +164,102 @@
     `;
   }
 
+  function optionalTextSection(title, value) {
+    const text = String(value || "").trim();
+    if (!text) return "";
+
+    return `
+      <section>
+        <h3>${escapeHtml(title)}</h3>
+        <p>${escapeHtml(text)}</p>
+      </section>
+    `;
+  }
+
+  function visionSection(vision, description) {
+    const visionText = String(vision || "").trim();
+    const descriptionText = String(description || "").trim();
+    if (!visionText && !descriptionText) return "";
+
+    return `
+      <section>
+        <h3>Visi</h3>
+        ${visionText ? `<p>${escapeHtml(visionText)}</p>` : ""}
+        ${descriptionText ? `<p>${escapeHtml(descriptionText)}</p>` : ""}
+      </section>
+    `;
+  }
+
+  function optionalListSection(title, items, className = "") {
+    const cleanItems = Array.isArray(items)
+      ? items.map((item) => String(item || "").trim()).filter(Boolean)
+      : [];
+    if (!cleanItems.length) return "";
+
+    const sectionClass = className ? ` class="${escapeHtml(className)}"` : "";
+    return `
+      <section${sectionClass}>
+        <h3>${escapeHtml(title)}</h3>
+        ${listTemplate(cleanItems)}
+      </section>
+    `;
+  }
+
+  function profileListSection(title, items, optional = false) {
+    if (optional) return optionalListSection(title, items);
+
+    return `
+      <section>
+        <h3>${escapeHtml(title)}</h3>
+        ${listTemplate(items)}
+      </section>
+    `;
+  }
+
+  function optionalTitledListSection(title, items) {
+    const cleanItems = Array.isArray(items)
+      ? items
+          .map((item) => ({
+            title: String(item?.title || "").trim(),
+            description: String(item?.description || "").trim(),
+          }))
+          .filter((item) => item.title || item.description)
+      : [];
+    if (!cleanItems.length) return "";
+
+    return `
+      <section>
+        <h3>${escapeHtml(title)}</h3>
+        <ul class="profile-detail-list">
+          ${cleanItems
+            .map(
+              (item) => `
+                <li>
+                  ${item.title ? `<strong>${escapeHtml(item.title)}</strong>` : ""}
+                  ${item.description ? `<span>${escapeHtml(item.description)}</span>` : ""}
+                </li>
+              `
+            )
+            .join("")}
+        </ul>
+      </section>
+    `;
+  }
+
+  function campaignThemeSection(theme) {
+    const title = String(theme?.title || "").trim();
+    const description = String(theme?.description || "").trim();
+    if (!title && !description) return "";
+
+    return `
+      <section class="campaign-theme-section">
+        <h3>Identitas Kampanye</h3>
+        ${title ? `<strong class="campaign-theme-title">${escapeHtml(title)}</strong>` : ""}
+        ${description ? `<p>${escapeHtml(description)}</p>` : ""}
+      </section>
+    `;
+  }
+
   function compactListTemplate(items, defaultItem) {
     const safeItems = asList(items, defaultItem);
 
@@ -171,6 +277,27 @@
       <ol class="guide-steps">
         ${safeItems.map((item) => `<li>${escapeHtml(item)}</li>`).join("")}
       </ol>
+    `;
+  }
+
+  function candidateVideo(candidate) {
+    const video = String(candidate.video || "").trim();
+    if (!video) return "";
+
+    const title = fallback(candidate.name, "Kandidat");
+    return `
+      <section class="candidate-video-section">
+        <h3>Video Perkenalan</h3>
+        <div class="candidate-video-frame">
+          <iframe
+            src="${escapeHtml(video)}"
+            title="Video perkenalan ${escapeHtml(title)}"
+            allow="autoplay; encrypted-media"
+            allowfullscreen
+            loading="lazy"
+          ></iframe>
+        </div>
+      </section>
     `;
   }
 
@@ -241,8 +368,60 @@
     const house = fallback(candidate.house, "Alamat rumah belum diisi");
     const profession = fallback(candidate.profession, "Profesi belum diisi");
     const summary = fallback(candidate.summary, "Ringkasan profil kandidat sedang dilengkapi panitia.");
-    const vision = fallback(candidate.vision, "Visi kandidat sedang dilengkapi panitia.");
-    const quote = fallback(candidate.quote, "Pernyataan kandidat sedang dilengkapi panitia.");
+    const candidateNumber = String(candidate.candidateNumber || "").trim();
+    const term = String(candidate.term || "").trim();
+    const hasExtendedProfile = Boolean(
+      candidateNumber ||
+        term ||
+        candidate.campaignTheme ||
+        candidate.reasons?.length ||
+        candidate.mainIdeas?.length ||
+        candidate.focusAreas?.length ||
+        candidate.purpose ||
+        candidate.visionDescription ||
+        candidate.values?.length ||
+        candidate.commitments?.length ||
+        candidate.commitmentDetails?.length ||
+        candidate.valueDetails?.length ||
+        candidate.mainMessage ||
+        candidate.electionInfo?.length ||
+        candidate.slogans?.length
+    );
+    const vision = hasExtendedProfile
+      ? String(candidate.vision || "").trim()
+      : fallback(candidate.vision, "Visi kandidat sedang dilengkapi panitia.");
+    const quote = hasExtendedProfile
+      ? String(candidate.quote || "").trim()
+      : fallback(candidate.quote, "Pernyataan kandidat sedang dilengkapi panitia.");
+    const isRtCandidate = String(candidate.category || "").trim().toUpperCase() === "RT";
+    const extendedProfileContent = isRtCandidate
+      ? ""
+      : `
+        ${campaignThemeSection(candidate.campaignTheme)}
+        ${optionalTextSection("Tujuan Mencalonkan Diri", candidate.purpose)}
+        ${optionalTitledListSection("Alasan Mencalonkan Diri", candidate.reasons)}
+        ${optionalTitledListSection("Gagasan Utama", candidate.mainIdeas)}
+        ${optionalListSection("Fokus Utama", candidate.focusAreas)}
+        ${visionSection(vision, candidate.visionDescription)}
+
+        ${candidateVideo(candidate)}
+
+        ${profileListSection("Misi", candidate.missions, hasExtendedProfile)}
+        ${profileListSection(
+          hasExtendedProfile ? "Program & Rencana Kerja Utama" : "Program Prioritas",
+          candidate.programs,
+          hasExtendedProfile
+        )}
+        ${optionalListSection("Nilai yang Dipegang", candidate.values)}
+        ${optionalListSection("Komitmen", candidate.commitments)}
+        ${optionalTitledListSection("Komitmen Utama", candidate.commitmentDetails)}
+        ${optionalTitledListSection("Nilai-Nilai yang Diusung", candidate.valueDetails)}
+        ${optionalTitledListSection("Informasi Pemilihan", candidate.electionInfo)}
+        ${optionalListSection("Slogan Kampanye", candidate.slogans, "campaign-slogans-section")}
+        ${profileListSection("Pengalaman", candidate.experience, hasExtendedProfile)}
+        ${optionalTextSection("Pesan Utama", candidate.mainMessage)}
+        ${quote ? `<blockquote>${escapeHtml(quote)}</blockquote>` : ""}
+      `;
 
     selectors.modalContent.innerHTML = `
       <div class="modal-media">
@@ -251,12 +430,6 @@
       <div class="modal-copy">
         <p class="candidate-area">${escapeHtml(role)} - ${escapeHtml(area)}</p>
         <h2 id="modal-title">${escapeHtml(name)}</h2>
-        <div class="profile-status-row">
-          <span class="status-pill">${escapeHtml(candidateStatus(candidate))}</span>
-          <span>Sumber data: ${escapeHtml(candidateSource(candidate))}</span>
-        </div>
-        <p class="modal-summary">${escapeHtml(summary)}</p>
-
         <dl class="profile-facts">
           <div>
             <dt>Domisili</dt>
@@ -274,29 +447,29 @@
             <dt>RT/RW</dt>
             <dd>${escapeHtml(fallback(candidate.rtRw, "Belum diisi"))}</dd>
           </div>
+          ${
+            candidateNumber
+              ? `
+                <div>
+                  <dt>Nomor Urut</dt>
+                  <dd>${escapeHtml(candidateNumber)}</dd>
+                </div>
+              `
+              : ""
+          }
+          ${
+            term
+              ? `
+                <div>
+                  <dt>Periode</dt>
+                  <dd>${escapeHtml(term)}</dd>
+                </div>
+              `
+              : ""
+          }
         </dl>
 
-        <section>
-          <h3>Visi</h3>
-          <p>${escapeHtml(vision)}</p>
-        </section>
-
-        <section>
-          <h3>Misi</h3>
-          ${listTemplate(candidate.missions)}
-        </section>
-
-        <section>
-          <h3>Program Prioritas</h3>
-          ${listTemplate(candidate.programs)}
-        </section>
-
-        <section>
-          <h3>Pengalaman</h3>
-          ${listTemplate(candidate.experience)}
-        </section>
-
-        <blockquote>${escapeHtml(quote)}</blockquote>
+        ${extendedProfileContent}
       </div>
     `;
 
@@ -318,22 +491,6 @@
             <span>${escapeHtml(item.date)}</span>
             <h3>${escapeHtml(item.phase)}</h3>
             <p>${escapeHtml(item.description)}</p>
-          </article>
-        `
-      )
-      .join("");
-  }
-
-  function renderFaqs() {
-    selectors.faqList.innerHTML = data.faqs
-      .map(
-        (faq, index) => `
-          <article class="faq-item">
-            <button type="button" aria-expanded="${index === 0 ? "true" : "false"}">
-              <span>${escapeHtml(faq.question)}</span>
-              <strong>+</strong>
-            </button>
-            <p${index === 0 ? "" : " hidden"}>${escapeHtml(faq.answer)}</p>
           </article>
         `
       )
@@ -369,17 +526,6 @@
       }
     });
 
-    selectors.faqList.addEventListener("click", (event) => {
-      const button = event.target.closest("button");
-      if (!button) return;
-
-      const item = button.closest(".faq-item");
-      const panel = item.querySelector("p");
-      const isOpen = button.getAttribute("aria-expanded") === "true";
-      button.setAttribute("aria-expanded", String(!isOpen));
-      panel.hidden = isOpen;
-    });
-
     selectors.navToggle.addEventListener("click", () => {
       const isOpen = selectors.navToggle.getAttribute("aria-expanded") === "true";
       selectors.navToggle.setAttribute("aria-expanded", String(!isOpen));
@@ -400,7 +546,6 @@
     renderMiniCandidates();
     renderTimeline();
     renderVoterGuide();
-    renderFaqs();
     bindEvents();
   }
 
